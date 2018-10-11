@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>scroll-tab.js - example - rmc-tabs@1.2.25</title>
+  <title>scroll-tab.js - example - rmc-tabs-dynamic-width@1.3.0</title>
   <meta name="viewport"
         content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
   <meta charset="utf-8"/>
@@ -257,21 +257,21 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
     document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"'+'>'+'<'+'/'+'script>');
   }
   </script>
-  <link rel="stylesheet" href="../common.css" />
+  
 </head>
 
 <body>
   <div class="container">
     <div class="header">
-      <h1>rmc-tabs@1.2.25</h1>
+      <h1>rmc-tabs-dynamic-width@1.3.0</h1>
 
-      <p>React Mobile Tabs Component(web &amp; react-native)</p>
+      <p>React Mobile Tabs Component(web)</p>
     </div>
     <div class="example" id="__react-content"></div>
 
     <div class="highlight"><pre><code language="js"><span class="hljs-comment">/* tslint:disable:no-console */</span>
 
-<span class="hljs-keyword">import</span> <span class="hljs-string">'rmc-tabs/assets/index.css'</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-string">'rmc-tabs/assets/index.less'</span>;
 
 <span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;
 <span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;
@@ -309,6 +309,23 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
       <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">div</span>&gt;</span>
         <span class="hljs-tag">&lt;<span class="hljs-title">div</span> <span class="hljs-attribute">style</span>=<span class="hljs-value">{{</span> <span class="hljs-attribute">...baseStyle</span> }}&gt;</span>
           <span class="hljs-tag">&lt;<span class="hljs-title">h2</span>&gt;</span>normal<span class="hljs-tag">&lt;/<span class="hljs-title">h2</span>&gt;</span>
+
+            <span class="hljs-tag">&lt;<span class="hljs-title">Tabs</span> <span class="hljs-attribute">tabs</span>=<span class="hljs-value">{[</span>
+                  { <span class="hljs-attribute">key:</span> '<span class="hljs-attribute">asdasd</span>', <span class="hljs-attribute">title:</span> '<span class="hljs-attribute">title</span>'},
+                  { <span class="hljs-attribute">key:</span> '<span class="hljs-attribute">asdasd2</span>', <span class="hljs-attribute">title:</span> '<span class="hljs-attribute">title</span> <span class="hljs-attribute">second</span>'},
+                  { <span class="hljs-attribute">key:</span> '<span class="hljs-attribute">asdasd3</span>', <span class="hljs-attribute">title:</span> '<span class="hljs-attribute">title</span> <span class="hljs-attribute">second</span> <span class="hljs-attribute">longer</span>'},
+                  { <span class="hljs-attribute">key:</span> '<span class="hljs-attribute">title</span>', <span class="hljs-attribute">title:</span> '<span class="hljs-attribute">title</span>'},
+                  { <span class="hljs-attribute">key:</span> '<span class="hljs-attribute">title4</span>', <span class="hljs-attribute">title:</span> '<span class="hljs-attribute">title</span> <span class="hljs-attribute">thir</span> <span class="hljs-attribute">asd</span>'},
+                  { <span class="hljs-attribute">key:</span> '<span class="hljs-attribute">title5</span>', <span class="hljs-attribute">title:</span> '<span class="hljs-attribute">title</span> <span class="hljs-attribute">thir33</span> <span class="hljs-attribute">asd</span>'},
+                  { <span class="hljs-attribute">key:</span> '<span class="hljs-attribute">title6</span>', <span class="hljs-attribute">title:</span> '<span class="hljs-attribute">sixth</span> <span class="hljs-attribute">asd</span>'},
+                  { <span class="hljs-attribute">key:</span> '<span class="hljs-attribute">title7</span>', <span class="hljs-attribute">title:</span> '<span class="hljs-attribute">sevent</span> <span class="hljs-attribute">asdads</span> <span class="hljs-attribute">asd</span> <span class="hljs-attribute">asd</span>'},
+                  { <span class="hljs-attribute">key:</span> '<span class="hljs-attribute">title8</span>', <span class="hljs-attribute">title:</span> '<span class="hljs-attribute">eight</span> <span class="hljs-attribute">thirdachicken</span>'},
+              ]} <span class="hljs-attribute">initialPage</span>=<span class="hljs-value">{'1'}</span> <span class="hljs-attribute">usePaged</span>=<span class="hljs-value">{true}</span>
+              <span class="hljs-attribute">noRenderContent</span>=<span class="hljs-value">{true}</span> <span class="hljs-attribute">distanceToChangeTab</span>=<span class="hljs-value">{1}</span>
+                  <span class="hljs-attribute">tabBarTextStyle</span>=<span class="hljs-value">{{padding:</span> '<span class="hljs-attribute">8px</span> <span class="hljs-attribute">10px</span>', <span class="hljs-attribute">whiteSpace:</span> '<span class="hljs-attribute">nowrap</span>', <span class="hljs-attribute">letterSpacing:</span> '<span class="hljs-attribute">1px</span>', <span class="hljs-attribute">textTransform:</span> '<span class="hljs-attribute">uppercase</span>'}}
+            /&gt;</span>
+
+
           <span class="hljs-tag">&lt;<span class="hljs-title">Tabs</span> <span class="hljs-attribute">tabs</span>=<span class="hljs-value">{tabData}</span> <span class="hljs-attribute">onChange</span>=<span class="hljs-value">{(tab,</span> <span class="hljs-attribute">index</span>) =&gt;</span> {
             this.setState({
               scData: JSON.stringify({ index: index + Math.random(), tab })
@@ -374,7 +391,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
 ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-title">BasicDemo</span> /&gt;</span>, document.getElementById('__react-content'));
 </span></code></pre></div>
   </div>
-  <a href="https://github.com/react-component/m-tabs">
+  <a href="https://github.com/dsmalicsi/m-tabs">
     <img style="position: absolute; top: 0; right: 0; border: 0;"
          src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
          alt="Fork me on GitHub"
