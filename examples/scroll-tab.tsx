@@ -38,6 +38,23 @@ class BasicDemo extends React.Component<{}, any> {
       <div>
         <div style={{ ...baseStyle }}>
           <h2>normal</h2>
+
+            <Tabs tabs={[
+                  { key: 'asdasd', title: 'title'},
+                  { key: 'asdasd2', title: 'title second'},
+                  { key: 'asdasd3', title: 'title second longer'},
+                  { key: 'title', title: 'title'},
+                  { key: 'title4', title: 'title thir asd'},
+                  { key: 'title5', title: 'title thir33 asd'},
+                  { key: 'title6', title: 'sixth asd'},
+                  { key: 'title7', title: 'sevent asdads asd asd'},
+                  { key: 'title8', title: 'eight thirdachicken'},
+              ]} initialPage={'1'} usePaged={true}
+              noRenderContent={true} distanceToChangeTab={1}
+                  tabBarTextStyle={{padding: '8px 10px', whiteSpace: 'nowrap', letterSpacing: '1px', textTransform: 'uppercase'}}
+            />
+
+
           <Tabs tabs={tabData} onChange={(tab, index) => {
             this.setState({
               scData: JSON.stringify({ index: index + Math.random(), tab })

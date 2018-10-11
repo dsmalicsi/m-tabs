@@ -38,12 +38,18 @@ export class DefaultTabBar extends React.PureComponent<PropsType, StateType> {
     let finalOffset = 0;
 
     const getLastOffset = (isVertical = this.isTabBarVertical()) => {
-      let offset = +`${lastOffset}`.replace('%', '');
-      if (`${lastOffset}`.indexOf('%') >= 0) {
-        offset /= 100;
-        offset *= isVertical ? this.layout.clientHeight : this.layout.clientWidth;
+      let offset = +`${lastOffset}`.replace('px', '');
+
+      if (isNaN(offset)) {
+        return 0;
+      } else {
+        return offset;
       }
-      return offset;
+      // if (`${lastOffset}`.indexOf('px') >= 0) {
+      //   offset /= 100;
+      //   offset *= isVertical ? this.layout.clientHeight : this.layout.clientWidth;
+      // }
+      // return offset;
     };
 
     return {
@@ -55,7 +61,9 @@ export class DefaultTabBar extends React.PureComponent<PropsType, StateType> {
         if (!status.moveStatus || !this.layout) return;
         const isVertical = this.isTabBarVertical();
         let offset = getLastOffset() + (isVertical ? status.moveStatus.y : status.moveStatus.x);
-        const canScrollOffset = isVertical ?
+
+
+          const canScrollOffset = isVertical ?
           -this.layout.scrollHeight + this.layout.clientHeight :
           -this.layout.scrollWidth + this.layout.clientWidth;
         offset = Math.min(offset, 0);
@@ -87,6 +95,8 @@ export class DefaultTabBar extends React.PureComponent<PropsType, StateType> {
     this.state = {
       ...new StateType,
       ...this.getTransformByIndex(props),
+        underlineWidth: '20%',
+        scrollLeft: 0,
     };
   }
 
@@ -103,25 +113,54 @@ export class DefaultTabBar extends React.PureComponent<PropsType, StateType> {
   }
 
   getTransformByIndex = (props: PropsType) => {
-    const { activeTab, tabs, page = 0 } = props;
-    const isVertical = this.isTabBarVertical();
 
-    const size = this.getTabSize(page, tabs.length);
-    const center = page / 2;
-    let pos = Math.min(activeTab, tabs.length - center - .5);
-    const skipSize = Math.min(-(pos - center + .5) * size, 0);
-    this.onPan.setCurrentOffset(`${skipSize}%`);
-    return {
-      transform: getPxStyle(skipSize, '%', isVertical),
-      showPrev: activeTab > center - .5 && tabs.length > page,
-      showNext: activeTab < tabs.length - center - .5 && tabs.length > page,
-    };
+    // setTimeout(()=>{
+        const { activeTab, tabs, page = 0 } = props;
+        const isVertical = this.isTabBarVertical();
+
+        const size = this.getTabSize(page, tabs.length);
+        const center = page / 2;
+        let pos = Math.min(activeTab, tabs.length - center - .5);
+        const skipSize = Math.min(-(pos - center + .5) * size, 0);
+        this.onPan.setCurrentOffset(`-${Number(props.offsetLeft) - ((window.innerWidth - (Number(props.offsetWidth)))/2)}px`);
+
+        if (this.state) {
+            let translateLeft = Number(props.offsetLeft) - ((window.innerWidth - (Number(props.offsetWidth)))/2);
+
+            if (translateLeft < 0) {
+              translateLeft = 0;
+            }
+
+            return {
+                transform: `translate3d(-${translateLeft}px, 0px, 0px)`,
+                // getPxStyle(skipSize, '%', isVertical),
+                showPrev: activeTab > center - .5 && tabs.length > page,
+                showNext: activeTab < tabs.length - center - .5 && tabs.length > page,
+            };
+        } else {
+
+            return {
+                transform: getPxStyle(skipSize, '%', isVertical),
+                showPrev: activeTab > center - .5 && tabs.length > page,
+                showNext: activeTab < tabs.length - center - .5 && tabs.length > page,
+            };
+        }
+    // }, 1)
+
+
   }
 
-  onPress = (index: number) => {
+  onPress = (index: number, e) => {
+
+    let {offsetLeft, offsetWidth} = e.target;
+    this.setState({
+        underlineWidth: offsetWidth,
+        scrollLeft: offsetLeft
+    });
     const { goToTab, onTabClick, tabs } = this.props;
     onTabClick && onTabClick(tabs[index], index);
-    goToTab && goToTab(index);
+    goToTab && goToTab(index, null, null, offsetLeft, offsetWidth);
+
   }
 
   isTabBarVertical = (position = this.props.tabBarPosition) => position === 'left' || position === 'right';
@@ -151,13 +190,14 @@ export class DefaultTabBar extends React.PureComponent<PropsType, StateType> {
     return <div key={`t_${i}`}
       style={{
         ...textStyle,
-        ...isTabBarVertical ? { height: `${size}%` } : { width: `${size}%` },
-      }}
+        // ...isTabBarVertical ? { height: `${size}%` } : { width: `${size}%` },
+        ...isTabBarVertical ? { height: `${size}%` } : null }
+      }
       id={`m-tabs-${instanceId}-${i}`}
       role="tab"
       aria-selected={ariaSelected}
       className={cls}
-      onClick={() => this.onPress(i)}
+      onClick={(e) => this.onPress(i, e)}
     >
       {renderTab ? renderTab(t) : t.title}
     </div>;
@@ -201,12 +241,14 @@ export class DefaultTabBar extends React.PureComponent<PropsType, StateType> {
     const { setCurrentOffset, ...onPan } = this.onPan;
     const underlineProps = {
       style: {
-        ...isTabBarVertical ? { height: `${size}%` } : { width: `${size}%` },
-        ...isTabBarVertical ? { top: `${size * activeTab}%` } : { left: `${size * activeTab}%` },
+        // ...isTabBarVertical ? { height: `${size}%` } : { width: `${size}%` },
+        ...isTabBarVertical ? { height: `${size}%` } : {width: `${this.state.underlineWidth}px`},
+        ...isTabBarVertical ? { top: `${size * activeTab}%` } : { left: `${this.state.scrollLeft}px` },
         ...tabBarUnderlineStyle,
       },
       className: `${prefixCls}-underline`,
     };
+
 
     return <div className={`${cls} ${prefixCls}-${tabBarPosition}`} style={style}>
       {showPrev && <div className={`${prefixCls}-prevpage`}></div>}

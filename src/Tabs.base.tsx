@@ -96,7 +96,7 @@ export abstract class Tabs<
     }
   }
 
-  goToTab(index: number, force = false, newState: any = {}) {
+  goToTab(index: number, force = false, newState: any = {}, offsetLeft: number, offsetWidth: number) {
     if (!force && this.nextCurrentTab === index) {
       return false;
     }
@@ -113,6 +113,8 @@ export abstract class Tabs<
       this.setState({
         currentTab: index,
         ...newState,
+          offsetLeft,
+          offsetWidth
       });
     }
     return true;

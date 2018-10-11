@@ -112,15 +112,17 @@ export class Tabs extends Component<PropsType, StateType> {
     this.state = {
       ...this.state,
       ...new StateType,
+      offsetLeft: 0,
+      offsetWidth: 0,
       contentPos: this.getContentPosByIndex(
         this.getTabIndex(props),
         this.isTabVertical(props.tabDirection),
-        props.useLeftInsteadTransform
+        props.useLeftInsteadTransform,
       ),
     };
   }
 
-  goToTab(index: number, force = false, usePaged = this.props.usePaged) {
+  goToTab(index: number, force = false, usePaged = this.props.usePaged, offsetLeft: number, offsetWidth: number) {
     const { tabDirection, useLeftInsteadTransform } = this.props;
     let newState = {};
     if (usePaged) {
@@ -128,18 +130,26 @@ export class Tabs extends Component<PropsType, StateType> {
         contentPos: this.getContentPosByIndex(
           index,
           this.isTabVertical(tabDirection),
-          useLeftInsteadTransform
+          useLeftInsteadTransform,
+          offsetLeft,
+          offsetWidth
         ),
       };
     }
-    return super.goToTab(index, force, newState);
+
+    this.setState({
+      offsetLeft,
+      offsetWidth
+    })
+
+    return super.goToTab(index, force, newState, offsetLeft, offsetWidth);
   }
 
-  tabClickGoToTab(index: number) {
-    this.goToTab(index, false, true);
+  tabClickGoToTab(index: number, force, usePaged, offsetLeft, offsetWidth) {
+    this.goToTab(index, false, true, offsetLeft, offsetWidth);
   }
 
-  getContentPosByIndex(index: number, isVertical: boolean, useLeft = false) {
+  getContentPosByIndex(index: number, isVertical: boolean, useLeft = false, offsetLeft, offsetWidth) {
     const value = `${-index * 100}%`;
     this.onPan.setCurrentOffset(value);
     if (useLeft) {
@@ -147,7 +157,9 @@ export class Tabs extends Component<PropsType, StateType> {
     } else {
       const translate = isVertical ? `0px, ${value}` : `${value}, 0px`;
       // fix: content overlay TabBar on iOS 10. ( 0px -> 1px )
-      return `translate3d(${translate}, 1px)`;
+      // return `translate3d(${translate}, 1px)`;
+
+      return `translate3d(-${Number(offsetLeft) - ((window.innerWidth - (Number(offsetWidth)))/2)}}px, 1px)`;
     }
   }
 
@@ -248,10 +260,12 @@ export class Tabs extends Component<PropsType, StateType> {
 
   render() {
     const { prefixCls, tabBarPosition, tabDirection, useOnPan, noRenderContent } = this.props;
+    const { offsetLeft, offsetWidth } = this.state;
     const isTabVertical = this.isTabVertical(tabDirection);
 
     const tabBarProps: TabBarPropsType = {
       ...this.getTabBarBaseProps(),
+        offsetLeft, offsetWidth
     };
 
     const onPan = !isTabVertical && useOnPan ? this.onPan : {};
